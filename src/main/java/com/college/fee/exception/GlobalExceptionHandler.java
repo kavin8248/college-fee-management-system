@@ -14,4 +14,8 @@ public class GlobalExceptionHandler {
 	            .status(HttpStatus.NOT_FOUND)
 	            .body(ex.getMessage());
 	}
+	@ExceptionHandler(FeeNotFoundException.class)
+	public ResponseEntity<String> handleFeeNotFound(FeeNotFoundException ex) {
+	    return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+	}
 }
