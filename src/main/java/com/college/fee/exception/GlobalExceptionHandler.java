@@ -18,4 +18,11 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<String> handleFeeNotFound(FeeNotFoundException ex) {
 	    return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
 	}
+	@ExceptionHandler(IllegalArgumentException.class)
+	public ResponseEntity<String> handleIllegalArgument(IllegalArgumentException ex) {
+
+	    return ResponseEntity
+	            .status(HttpStatus.CONFLICT)
+	            .body(ex.getMessage());
+	}
 }
