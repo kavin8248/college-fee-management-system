@@ -24,6 +24,9 @@ public class PaymentService {
 	@Transactional
 	public Payment makePayment(Long feeId) {
 		Fee fee = feeRepository.findById(feeId).orElseThrow(() -> new FeeNotFoundException("Fee not found"));
+		if ("PAID".equalsIgnoreCase(fee.getStatus())) {
+		    throw new IllegalArgumentException("This fee has already been paid");
+		}
 		Payment payment = new Payment();
 		fee.setStatus("PAID");
 		payment.setFee(fee);
