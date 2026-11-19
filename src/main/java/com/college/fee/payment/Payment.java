@@ -23,6 +23,17 @@ public class Payment {
 	private LocalDateTime paymentDate;
 	private String paymentStatus;
 	private String paymentMethod;
+	private String gatewayReference;
+	public String getGatewayReference() {
+		return gatewayReference;
+	}
+
+
+	public void setGatewayReference(String gatewayReference) {
+		this.gatewayReference = gatewayReference;
+	}
+
+
 	@ManyToOne
 	@JoinColumn(name = "fee_id",nullable = false)
 	private Fee fee;
