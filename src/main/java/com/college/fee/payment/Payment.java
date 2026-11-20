@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 import com.college.fee.entity.Fee;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,16 +25,9 @@ public class Payment {
 	private String paymentStatus;
 	private String paymentMethod;
 	private String gatewayReference;
-	public String getGatewayReference() {
-		return gatewayReference;
-	}
-
-
-	public void setGatewayReference(String gatewayReference) {
-		this.gatewayReference = gatewayReference;
-	}
-
-
+	@Column(name = "idempotency_key", unique = true)
+	private String idempotencyKey;
+	
 	@ManyToOne
 	@JoinColumn(name = "fee_id",nullable = false)
 	private Fee fee;
@@ -43,15 +37,43 @@ public class Payment {
 	}
 
 
+	
+	
+	
 	public Payment(Long paymentID, BigDecimal amount, LocalDateTime paymentDate, String paymentStatus,
-			String paymentMethods, Fee fee) {
+			String paymentMethod, String gatewayReference, String idempotencyKey, Fee fee) {
 		super();
 		this.paymentID = paymentID;
 		this.amount = amount;
 		this.paymentDate = paymentDate;
 		this.paymentStatus = paymentStatus;
-		this.paymentMethod = paymentMethods;
+		this.paymentMethod = paymentMethod;
+		this.gatewayReference = gatewayReference;
+		this.idempotencyKey = idempotencyKey;
 		this.fee = fee;
+	}
+
+
+
+
+
+	public String getIdempotencyKey() {
+		return idempotencyKey;
+	}
+
+
+	public void setIdempotencyKey(String idempotencyKey) {
+		this.idempotencyKey = idempotencyKey;
+	}
+
+
+	public String getGatewayReference() {
+		return gatewayReference;
+	}
+
+
+	public void setGatewayReference(String gatewayReference) {
+		this.gatewayReference = gatewayReference;
 	}
 
 

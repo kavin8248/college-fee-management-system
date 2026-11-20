@@ -3,6 +3,7 @@ package com.college.fee.controller;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,7 +24,7 @@ public class PaymentController {
 	}
 
 	@PostMapping("/{feeId}")
-	public Payment makePayment(@PathVariable Long feeId) {
-		return paymentService.makePayment(feeId);
+	public Payment makePayment(@PathVariable Long feeId,  @RequestHeader("Idempotency-Key") String idempotencyKey) {
+		return paymentService.makePayment(feeId, idempotencyKey);
 	}
 }

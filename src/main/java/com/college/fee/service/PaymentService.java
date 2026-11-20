@@ -19,8 +19,6 @@ public class PaymentService {
 	private FeeRepository feeRepository;
 	private PaymentRepository paymentRepository;
 	private PaymentGateway paymentGateway;
-	
-	
 
 	public PaymentService(FeeRepository feeRepository, PaymentRepository paymentRepository,
 			PaymentGateway paymentGateway) {
@@ -30,23 +28,29 @@ public class PaymentService {
 		this.paymentGateway = paymentGateway;
 	}
 
-
-
 	@Transactional
-	public Payment makePayment(Long feeId) {
+	public Payment makePayment(Long feeId, String idempotencyKey) {
+		Payment existingPayment = paymentRepository.findByIdempotencyKey(idempotencyKey).orElse(null);
+
+		if (existingPayment != null) {
+			if (!existingPayment.getFee().getFeeId().equals(feeId)) {
+		        throw new IllegalArgumentException(
+		                "Idempotency key already used for another fee"
+		        );
+		    }
+			return existingPayment;
+		}
 		Fee fee = feeRepository.findById(feeId).orElseThrow(() -> new FeeNotFoundException("Fee not found"));
 		if ("PAID".equalsIgnoreCase(fee.getStatus())) {
-		    throw new IllegalArgumentException("This fee has already been paid");
+			throw new IllegalArgumentException("This fee has already been paid");
 		}
-		System.out.println("Fee ID: " + feeId + ", Status: " + fee.getStatus());
-		PaymentResult result = paymentGateway.charge(
-			    BigDecimal.valueOf(fee.getAmount())
-			);
+		PaymentResult result = paymentGateway.charge(BigDecimal.valueOf(fee.getAmount()));
 		if (!result.success()) {
-		    throw new IllegalArgumentException("Payment failed");
+			throw new IllegalArgumentException("Payment failed");
 		}
 		Payment payment = new Payment();
 		payment.setGatewayReference(result.reference());
+		payment.setIdempotencyKey(idempotencyKey);
 		fee.setStatus("PAID");
 		payment.setFee(fee);
 		payment.setAmount(BigDecimal.valueOf(fee.getAmount()));
