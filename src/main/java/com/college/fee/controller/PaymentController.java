@@ -1,5 +1,8 @@
 package com.college.fee.controller;
 
+import java.util.List;
+
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,5 +29,14 @@ public class PaymentController {
 	@PostMapping("/{feeId}")
 	public Payment makePayment(@PathVariable Long feeId,  @RequestHeader("Idempotency-Key") String idempotencyKey) {
 		return paymentService.makePayment(feeId, idempotencyKey);
+	}
+	
+	@GetMapping("/history/{registerNumber}")
+	public List<Payment> getPaymentHistory(@PathVariable String registerNumber){
+		return paymentService.getPaymentHistory(registerNumber);
+	}
+	@GetMapping("/{paymentId}")
+	public Payment getByPaymentById(@PathVariable Long paymentId) {
+		return paymentService.getPaymentById(paymentId);
 	}
 }

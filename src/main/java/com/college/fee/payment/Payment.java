@@ -122,8 +122,8 @@ public class Payment {
 	}
 
 
-	public void setPaymentMethod(String paymentMethods) {
-		this.paymentMethod = paymentMethods;
+	public void setPaymentMethod(String paymentMethod) {
+		this.paymentMethod = paymentMethod;
 	}
 
 
