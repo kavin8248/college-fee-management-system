@@ -7,6 +7,8 @@ import com.college.fee.entity.Fee;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -22,7 +24,8 @@ public class Payment {
 	private Long paymentID;
 	private BigDecimal amount;
 	private LocalDateTime paymentDate;
-	private String paymentStatus;
+	@Enumerated(EnumType.STRING)
+	private PaymentStatus paymentStatus;
 	private String paymentMethod;
 	private String gatewayReference;
 	@Column(name = "idempotency_key", unique = true)
@@ -37,10 +40,10 @@ public class Payment {
 	}
 
 
-	
-	
-	
-	public Payment(Long paymentID, BigDecimal amount, LocalDateTime paymentDate, String paymentStatus,
+
+
+
+	public Payment(Long paymentID, BigDecimal amount, LocalDateTime paymentDate, PaymentStatus paymentStatus,
 			String paymentMethod, String gatewayReference, String idempotencyKey, Fee fee) {
 		super();
 		this.paymentID = paymentID;
@@ -52,6 +55,12 @@ public class Payment {
 		this.idempotencyKey = idempotencyKey;
 		this.fee = fee;
 	}
+
+
+
+
+
+
 
 
 
@@ -107,14 +116,21 @@ public class Payment {
 	}
 
 
-	public String getPaymentStatus() {
+
+	public PaymentStatus getPaymentStatus() {
 		return paymentStatus;
 	}
 
 
-	public void setPaymentStatus(String paymentStatus) {
+
+
+
+	public void setPaymentStatus(PaymentStatus paymentStatus) {
 		this.paymentStatus = paymentStatus;
 	}
+
+
+
 
 
 	public String getPaymentMethod() {
